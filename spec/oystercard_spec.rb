@@ -9,4 +9,10 @@ RSpec.describe Oystercard do
     subject.top_up
     expect(subject.balance).to eq(5)
   end
+
+  it 'has a limit of 90' do 
+    allow(subject).to receive(:balance_ok) { false }
+
+    expect { subject.top_up }.to raise_error('The balance limit for this card is 90')
+  end
 end
