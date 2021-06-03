@@ -1,5 +1,8 @@
+require_relative 'station'
+
 class Oystercard 
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :exit_station
+  attr_accessor :journeys
 
   DEFAULT = 2
   LIMIT = 90
@@ -22,7 +25,8 @@ class Oystercard
   end
   
   def touch_in(station)
-    @entry_station = station.name
+    @entry_station = station
+    @station_entry = station
 
     fail "Insufficient funds! You need a minimum of $#{MINIMUM}" unless sufficient_funds?
   end
@@ -31,13 +35,18 @@ class Oystercard
     @balance >= MINIMUM
   end
 
-  def touch_out
-    @entry_station = nil
+  def touch_out(station)
+    @exit_station = station
     deduct
+    @entry_station = nil
   end
 
   def in_journey?
-    !!@entry_station
+    !!entry_station
+  end
+
+  def journeys
+   {entry: @station_entry, exit: @exit_station}
   end
 
   private 

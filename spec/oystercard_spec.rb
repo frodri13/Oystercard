@@ -1,7 +1,10 @@
 require 'oystercard'
 
 RSpec.describe Oystercard do  
-  let(:station) { double(:station, name: "name of the station")}
+  let(:entry_station) { double(:station)}
+  let(:exit_station) { double(:station) }
+  let(:journey){ {entry: entry_station, exit: exit_station} }
+
  
   it 'shows the balance of the card' do
     expect(subject.balance).to be_zero
@@ -23,18 +26,18 @@ RSpec.describe Oystercard do
 
   it 'deducts money from card\'s balance' do
     subject.top_up
-    expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM)
+    expect { subject.touch_out(exit_station) }.to change{ subject.balance }.by(-Oystercard::MINIMUM)
   end
 
   it 'changes the value of in_journey? to "true" when using the #touch_in method' do
     allow(subject).to receive(:sufficient_funds?) { true } 
     
-    subject.touch_in(station)
+    subject.touch_in(entry_station)
     expect(subject.in_journey?).to be_truthy
   end
 
   it 'changes the value of in_journey? to "false" when using the #touch_out method' do
-    subject.touch_out
+    subject.touch_out(exit_station)
 
     expect(subject.in_journey?).to be_falsy
   end
@@ -42,23 +45,45 @@ RSpec.describe Oystercard do
   it 'raises an error when the card has insufficient funds' do
     allow(subject).to receive(:sufficient_funds?) { false }
 
-    expect { subject.touch_in(station) }.to raise_error("Insufficient funds! You need a minimum of $#{Oystercard::MINIMUM}")
+    expect { subject.touch_in(entry_station) }.to raise_error("Insufficient funds! You need a minimum of $#{Oystercard::MINIMUM}")
   end
 
   it "charges the card the minimum fare of $#{Oystercard::MINIMUM}" do
     subject.top_up
-    subject.touch_in(station)
-    expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM)
+    subject.touch_in(entry_station)
+    expect { subject.touch_out(exit_station) }.to change{ subject.balance }.by(-Oystercard::MINIMUM)
   end
 
   describe 'interaction with stations' do
+  
 
     it 'remembers the name of the station when using #touch_in'do
       allow(subject).to receive(:sufficient_funds?) { true } 
       
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       expect(subject.entry_station).not_to be_nil
     end
-  end
 
+    it 'stores an exit station' do
+      allow(subject).to receive(:sufficient_funds?) { true } 
+      
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      
+      expect(subject.exit_station).to eq(exit_station)
+    end
+
+    it 'has an empty list of journeys' do
+      expect(subject.journeys[:entry]).to be_nil
+    end
+
+    it 'can store a journey' do
+      allow(subject).to receive(:sufficient_funds?) { true } 
+ 
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+
+      expect(subject.journeys).to include(journey)
+    end
+  end
 end
