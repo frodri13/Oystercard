@@ -76,6 +76,12 @@ As a customer
 I need to know where I've travelled from
 ```
 
+#touch_in was modified to accept an argument of a station. This station's name has been set as a double in our spec. I set it up to have an attr_reader of :name.
+
+I had to change previous tests to include the argument of staion for this method. And I changed the @in_journey to @entry_station for all tests and methods. Moreover, I changed the logic of #in_journey? to return true whenever @entry_station is not equal to nil.
+
+My touch out method changes this value to nil.
+
 ```
 In order to know where I have been
 As a customer
