@@ -8,6 +8,14 @@ Everything from topping up the card, to using it at different stations. It takes
 
 Within the command line, inside the directory, type rspec to run the tests.
 
+## How to use?
+
+Open IRB and require './lib/oystercard.rb'; create an instance of a card and two stations; #top_up some money
+into the card; #touch_in with the station object as an argument; #touch_out with the name of the next station.
+You can always check for balannce or the journey after completing the process.
+
+---
+
 ## User Stories
 
 ```
