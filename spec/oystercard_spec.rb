@@ -4,7 +4,6 @@ RSpec.describe Oystercard do
   let(:entry_station) { double(:station)}
   let(:exit_station) { double(:station) }
   let(:journey){ {entry: entry_station, exit: exit_station} }
-
  
   it 'shows the balance of the card' do
     expect(subject.balance).to be_zero
@@ -57,11 +56,10 @@ RSpec.describe Oystercard do
   describe 'interaction with stations' do
   
 
-    it 'remembers the name of the station when using #touch_in'do
+    it 'remembers the name of the station when using #touch_in' do
       allow(subject).to receive(:sufficient_funds?) { true } 
-      
       subject.touch_in(entry_station)
-      expect(subject.entry_station).not_to be_nil
+      expect(subject.entry_station).to be(entry_station)
     end
 
     it 'stores an exit station' do
@@ -74,7 +72,7 @@ RSpec.describe Oystercard do
     end
 
     it 'has an empty list of journeys' do
-      expect(subject.journeys[:entry]).to be_nil
+      expect(subject.journeys.length).to be_zero
     end
 
     it 'can store a journey' do

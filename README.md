@@ -1,7 +1,6 @@
 # Oystercard
 
 This project consist on simulating the process in which an Oystercard user would go through when using public transportation.
-
 Everything from topping up the card, to using it at different stations. It takes into account the balance of the card for each trip, and whether the card is currently being used or not.
 
 ## Testing
@@ -25,7 +24,6 @@ I want money on my card
 ```
 
 Before we can add any money into our Oystercard instance, we need a place to store it. So I created an instance variable called @balance = 0 in order to accomplish that. I also set it up as an attr_reader to be able to check the balance at any moment.
-
 My initial tests checks that an instance of our class is equal to zero.
 
 ```
@@ -35,7 +33,6 @@ I want to add money to my card
 ```
 
 For this second functionality, I created a top_up method with a value set to a constant called DEFAULT. My test evaluates if the balance of the card is equal to the DEFAULT value after topping it up.
-
 This method can either take an specific argument, or be used with the constant aforementioned.
 
 ```
@@ -85,9 +82,7 @@ I need to know where I've travelled from
 ```
 
 #touch_in was modified to accept an argument of a station. This station's name has been set as a double in our spec. I set it up to have an attr_reader of :name.
-
 I had to change previous tests to include the argument of staion for this method. And I changed the @in_journey to @entry_station for all tests and methods. Moreover, I changed the logic of #in_journey? to return true whenever @entry_station is not equal to nil.
-
 My touch out method changes this value to nil.
 
 ```
